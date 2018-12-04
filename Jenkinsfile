@@ -21,7 +21,7 @@ pipeline {
     }
 
     post {
-        success {
+        always {
             httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', responseHandle: 'NONE', url: "http://api-portal.inveritasoft.com:22180/api/sendMessage", httpMode: "POST", requestBody: '{\"chat_id\": \"-1001240674447\", \"text\":\"'+currentBuild.currentResult+'\"}'
             script {
                 if (env.BRANCH_NAME == 'master') {
