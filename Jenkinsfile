@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Build Release') {
             when {
-                branch 'master'
+                expression {
+                    return env.BRANCH_NAME == 'master';
+                }
             }
             steps {
                 sh './gradlew clean assembleRelease'
@@ -12,7 +14,9 @@ pipeline {
         }
         stage('Build Debug') {
             when {
-                branch 'dev'
+                expression {
+                    return env.BRANCH_NAME == 'dev';
+                }
             }
             steps {
                 sh './gradlew clean assembleDebug'
