@@ -25,7 +25,7 @@ pipeline {
     post {
         always {
             script {
-                message = sh 'git show -s ${GIT_COMMIT} --format="format:%s"'
+                message = sh (script: 'git show -s ${GIT_COMMIT} --format="format:%s"', returnStdout: true).trim()
             }
             httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', responseHandle: 'NONE', url: "http://api-portal.inveritasoft.com:22180/api/sendMessage", httpMode: "POST", requestBody: '{\"chat_id\": \"-1001240674447\", \"text\":\"BRANCH: '+env.BRANCH_NAME+'%0ABUILD NUMBER: '+currentBuild.number+'%0ASTATUS: '+currentBuild.currentResult+'%0ACOMMIT: '+ env.GIT_COMMIT +'%0ACHANGE: '+ message +'%0AJOB URL: '+env.JOB_URL+'\"}'
         }
