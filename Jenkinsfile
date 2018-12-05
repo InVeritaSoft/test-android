@@ -33,7 +33,8 @@ pipeline {
             script {
                 if(env.BRANCH_NAME == 'master') {
                     files = findFiles(glob: 'app/build/outputs/apk/release/*.apk');
-                } else {
+                } 
+                if(env.BRANCH_NAME == 'dev') {
                     files = findFiles(glob: 'app/build/outputs/apk/debug/*.apk');
                 }
                 
