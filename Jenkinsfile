@@ -1,7 +1,9 @@
 def files = []
 def message = ''
+@NonCPS
 def changeLogSets = []
 def logs = []
+@NonCPS
 def handleLogs(sets) {
     for (int i = 0; i < sets.size(); i++) {
         def entries = sets[i].items
