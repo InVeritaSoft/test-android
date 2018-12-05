@@ -24,9 +24,9 @@ pipeline {
         always {
             script {
                 if(env.BRANCH_NAME == 'master') {
-                    def files = findFiles(glob: '**/release/*.apk');
+                    def files = findFiles(glob: 'app/build/outputs/apk/release/*.apk');
                 } else {
-                    def files = findFiles(glob: '**/debug/*.apk');
+                    def files = findFiles(glob: 'app/build/outputs/apk/debug/*.apk');
                 }
                 
             }
