@@ -1,5 +1,7 @@
 def files = []
 def message = ''
+def changeLogSets = []
+def logs = []
 pipeline {
     agent any
 
@@ -26,8 +28,17 @@ pipeline {
         always {
             script {
                 message = sh (script: 'git show -s ${GIT_COMMIT} --format="format:%s"', returnStdout: true).trim()
+                changeLogSets = currentBuild.rawBuild.changeSets
+                for (int i = 0; i < changeLogSets.size(); i++) {
+                    def entries = changeLogSets[i].items
+                    for (int j = 0; j < entries.length; j++) {
+                        def entry = entries[j]
+                        logs.push(entry.msg)
+                    }
+                }
+                logs.join('%0A')
             }
-            httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', responseHandle: 'NONE', url: "http://api-portal.inveritasoft.com:22180/api/sendMessage", httpMode: "POST", requestBody: '{\"chat_id\": \"-1001240674447\", \"text\":\"BRANCH: '+env.BRANCH_NAME+'%0ABUILD NUMBER: '+currentBuild.number+'%0ASTATUS: '+currentBuild.currentResult+'%0ACOMMIT: '+ env.GIT_COMMIT +'%0ACHANGE: '+ message +'%0AJOB URL: '+env.JOB_URL+'\"}'
+            httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', responseHandle: 'NONE', url: "http://api-portal.inveritasoft.com:22180/api/sendMessage", httpMode: "POST", requestBody: '{\"chat_id\": \"-1001240674447\", \"text\":\"BRANCH: '+env.BRANCH_NAME+'%0ABUILD NUMBER: '+currentBuild.number+'%0ASTATUS: '+currentBuild.currentResult+'%0ACOMMIT: '+ env.GIT_COMMIT +'%0ACHANGE: '+ changeLogSets +'%0AJOB URL: '+env.JOB_URL+'\"}'
         }
         success {
             script {
