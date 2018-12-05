@@ -1,5 +1,4 @@
 def files = []
-def message = ''
 def logMessages = ''
 @NonCPS
 def handleLogs() {
@@ -39,7 +38,6 @@ pipeline {
     post {
         always {
             script {
-                message = sh (script: 'git show -s ${GIT_COMMIT} --format="format:%s"', returnStdout: true).trim()
                 logMessages = handleLogs()
             }
             httpRequest acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', responseHandle: 'NONE', url: "http://api-portal.inveritasoft.com:22180/api/sendMessage", httpMode: "POST", requestBody: '{\"chat_id\": \"-1001240674447\", \"text\":\"BRANCH: '+env.BRANCH_NAME+'%0ABUILD NUMBER: '+currentBuild.number+'%0ASTATUS: '+currentBuild.currentResult+'%0A%0A'+ logMessages +'%0A%0AJOB URL: '+env.JOB_URL+'%0ACONSOLE: '+ env.JOB_URL + currentBuild.number +'/console\"}'
