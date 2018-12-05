@@ -1,3 +1,4 @@
+def files = []
 pipeline {
     agent any
 
@@ -21,12 +22,13 @@ pipeline {
     }
 
     post {
+        
         always {
             script {
                 if(env.BRANCH_NAME == 'master') {
-                    def files = findFiles(glob: 'app/build/outputs/apk/release/*.apk');
+                    files = findFiles(glob: 'app/build/outputs/apk/release/*.apk');
                 } else {
-                    def files = findFiles(glob: 'app/build/outputs/apk/debug/*.apk');
+                    files = findFiles(glob: 'app/build/outputs/apk/debug/*.apk');
                 }
                 
             }
